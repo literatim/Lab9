@@ -1,12 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace Lab9
 {
@@ -20,7 +14,7 @@ namespace Lab9
             public string FavoriteColor { get; set; }
             public static Exception FormatException { get; set; }
             public static Exception IndexOutOfRangeException { get; set; }
-            
+
         }
 
         static void Main(string[] args)
@@ -34,33 +28,30 @@ namespace Lab9
 
             do
             {
-                Console.Write("Welcome to our C# class. Which student would you like to learn more about? (Enter a number 1-3): ");
+                Console.Write($"Welcome to our C# class. Which student would you like to learn more about? (Enter a number 1-{studentList.Count}): ");
                 var userInput = GetUserInput();
 
                 while (userInput > studentList.Count())
                 {
-                    Console.Write($"That student does not exist. Please try again. (Enter a number 1-3): ");
+                    Console.Write($"That student does not exist. Please try again. (Enter a number 1-{studentList.Count}): ");
+
+                    userInput = GetUserInput();
+                }
+
+                Console.Write($"Student {userInput} is {studentList[userInput - 1].Name}. You can find out more about {studentList[userInput - 1].Name}, or you can add a student. Enter favorite food, hometown, or favorite color, or add student: ");
+
+                bool isSecondaryInputValid = false;
+                while (!isSecondaryInputValid)
+                {
                     try
                     {
-                        userInput = GetUserInput();
+                        GetSecondaryInput(studentList, userInput);
+                        isSecondaryInputValid = true;
                     }
-                    catch (Exception)
+                    catch (FormatException e)
                     {
-                        throw Student.IndexOutOfRangeException;
+                        Console.WriteLine(e.Message);
                     }
-                }
-
-                Console.Write($"Student {userInput} is {studentList[userInput].Name}. What would you like to know about {studentList[userInput].Name}? Enter favorite food or hometown: ");
-
-
-                try
-                {
-                    GetSecondaryInput(studentList, userInput);
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine(e.Message);
-                    GetSecondaryInput(studentList, userInput);
                 }
 
                 Console.Write("Would you like to start again? (y/n): ");
@@ -78,35 +69,78 @@ namespace Lab9
 
             if (secondaryInput == "favorite food")
             {
-                Console.Write($"{studentList[userInput].Name}'s favorite food is {studentList[userInput].FavoriteFood}. Would you like to know something else? (yes/no): ");
+                Console.Write($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}. Would you like to know something else? (yes/no): ");
                 var userContinue = Console.ReadLine();
                 if (userContinue == "yes")
                 {
-                    Console.WriteLine($"{studentList[userInput].Name}'s hometown is {studentList[userInput].Hometown}.");
+                    Console.WriteLine($"{studentList[userInput - 1].Name}'s hometown is {studentList[userInput - 1].Hometown}, and favorite color is {studentList[userInput - 1].FavoriteColor}.");
                 }
             }
             else if (secondaryInput == "hometown")
             {
-                Console.Write($"{studentList[userInput].Name}'s hometown is {studentList[userInput].Hometown}. Would you like to know something else? (yes/no): ");
+                Console.Write($"{studentList[userInput - 1].Name}'s hometown is {studentList[userInput - 1].Hometown}. Would you like to know something else? (yes/no): ");
                 var userContinue = Console.ReadLine();
                 if (userContinue == "yes")
                 {
-                    Console.WriteLine($"{studentList[userInput].Name}'s favorite food is {studentList[userInput].FavoriteFood}.");
+                    Console.WriteLine($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}, and favorite color is {studentList[userInput - 1].FavoriteColor}.");
+                }
+            }
+            else if (secondaryInput == "favorite color")
+            {
+                Console.Write($"{studentList[userInput - 1].Name}'s favorite color is {studentList[userInput - 1].FavoriteColor}. Would you like to know something else? (yes/no): ");
+                var userContinue = Console.ReadLine();
+                if (userContinue == "yes")
+                {
+                    Console.WriteLine($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}, and hometown is {studentList[userInput - 1].Hometown}.");
                 }
             }
             else if (secondaryInput == "add student")
             {
-                addStudent();
+                AddStudent(studentList);
             }
             else
             {
-                throw new FormatException("That data does not exist. Please try again. Enter favorite food or hometown: ");
+                throw new FormatException("That data does not exist. Please try again. Enter favorite food, hometown, favorite color, or add student: ");
             }
         }
 
-        private static void addStudent()
+        private static void AddStudent(List<Student> studentList)
         {
-            
+            Console.Write("Enter the student's name: ");
+            string inputName = Console.ReadLine();
+            while (string.IsNullOrEmpty(inputName))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                Console.Write("Enter the student's name: ");
+                inputName = Console.ReadLine();
+            }
+
+            Console.Write("Enter the student's favorite food: ");
+            string inputFavoriteFood = Console.ReadLine();
+            while (string.IsNullOrEmpty(inputFavoriteFood))
+            {
+                Console.WriteLine("Favorite food cannot be empty.");
+                Console.Write("Enter the student's favorite food: ");
+                inputFavoriteFood = Console.ReadLine();
+            }
+            Console.Write("Enter the student's hometown: ");
+            string inputHometown = Console.ReadLine();
+            while (string.IsNullOrEmpty(inputHometown))
+            {
+                Console.WriteLine("Hometown cannot be empty.");
+                Console.Write("Enter the student's hometown: ");
+                inputHometown = Console.ReadLine();
+            }
+            Console.Write("Enter the student's favorite color: ");
+            string inputFavoriteColor = Console.ReadLine();
+            while (string.IsNullOrEmpty(inputFavoriteColor))
+            {
+                Console.WriteLine("Favorite color cannot be empty.");
+                Console.Write("Enter the student's favorite color: ");
+                inputFavoriteColor = Console.ReadLine();
+            }
+
+            studentList.Add(new Student() { Name = inputName, FavoriteFood = inputFavoriteFood, Hometown = inputHometown, FavoriteColor = inputFavoriteColor });
         }
 
         private static int GetUserInput()
@@ -118,7 +152,6 @@ namespace Lab9
                 Console.WriteLine("Please enter a number: ");
             }
 
-            input -= 1;
             return input;
         }
     }
