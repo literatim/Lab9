@@ -6,6 +6,10 @@ namespace Lab9
 {
     class Program
     {
+        // James - I like that you are using a student class! I would put it in it's own file though.  also
+        // I see you are putting the possible Exceptions on this class as properties.  I'll be honest I don't 
+        // really have a strong opinion about doing this, but I will let you know, I haven't seen anyone doing this.
+        // I think it is creative and for now it's fine.
         public class Student
         {
             public string Name { get; set; }
@@ -19,6 +23,7 @@ namespace Lab9
 
         static void Main(string[] args)
         {
+            // James - List of students, good job.
             var studentList = new List<Student>
             {
                 new Student() {Name = "Ben Jen", FavoriteFood = "Pizza", Hometown = "Toledo, OH", FavoriteColor = "Blue"},
@@ -28,7 +33,9 @@ namespace Lab9
 
             do
             {
+                // James - Maybe try displaying the list of students first so the user has an idea what he/she is working with.
                 Console.Write($"Welcome to our C# class. Which student would you like to learn more about? (Enter a number 1-{studentList.Count}): ");
+                // James - seperation of concerns in practice, nice.
                 var userInput = GetUserInput();
 
                 while (userInput > studentList.Count())
@@ -66,7 +73,11 @@ namespace Lab9
         private static void GetSecondaryInput(List<Student> studentList, int userInput)
         {
             var secondaryInput = Console.ReadLine();
-
+            // James - I would consider making what the user has to input way more clear, for exmaple, reduce the words
+            // the user needs to input to like "food" and you can wrap that around brackets, so like 
+            // favorite [food].  then afterwords you can WRiteLine another message saying something like 
+            // "please enter the word between the brackets.
+            // that would make it very clear what the user has to enter.
             if (secondaryInput == "favorite food")
             {
                 Console.Write($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}. Would you like to know something else? (yes/no): ");
@@ -85,6 +96,11 @@ namespace Lab9
                     Console.WriteLine($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}, and favorite color is {studentList[userInput - 1].FavoriteColor}.");
                 }
             }
+            // James - I would consider making what the user has to input way more clear, for exmaple, reduce the words
+            // the user needs to input to like "color" and you can wrap that around brackets, so like 
+            // favorite [color].  then afterwords you can WRiteLine another message saying something like 
+            // "please enter the word between the brackets.
+            // that would make it very clear what the user has to enter.
             else if (secondaryInput == "favorite color")
             {
                 Console.Write($"{studentList[userInput - 1].Name}'s favorite color is {studentList[userInput - 1].FavoriteColor}. Would you like to know something else? (yes/no): ");
@@ -94,6 +110,11 @@ namespace Lab9
                     Console.WriteLine($"{studentList[userInput - 1].Name}'s favorite food is {studentList[userInput - 1].FavoriteFood}, and hometown is {studentList[userInput - 1].Hometown}.");
                 }
             }
+            // James - I would consider making what the user has to input way more clear, for exmaple, reduce the words
+            // the user needs to input to like "student" and you can wrap that around brackets, so like 
+            // add [student].  then afterwords you can WRiteLine another message saying something like 
+            // "please enter the word between the brackets.
+            // that would make it very clear what the user has to enter.
             else if (secondaryInput == "add student")
             {
                 AddStudent(studentList);
@@ -143,6 +164,8 @@ namespace Lab9
             studentList.Add(new Student() { Name = inputName, FavoriteFood = inputFavoriteFood, Hometown = inputHometown, FavoriteColor = inputFavoriteColor });
         }
 
+        // James - I like that you are using this method in several spots in your code, really cool, this is what 
+        // methods are all about! you are practicing modularity!
         private static int GetUserInput()
         {
             int input;
